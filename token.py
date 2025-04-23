@@ -24,6 +24,10 @@ class TokenType(Enum):
     RIGHT_PAREN = auto()
     LEFT_BRACE  = auto()
     RIGHT_BRACE = auto()
+    DATE        = auto()
+    AND         = auto()
+    RUN         = auto()
+    OR          = auto()
     EOF         = auto()
 
 class Token:

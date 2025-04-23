@@ -11,7 +11,9 @@ class Lexer:
           "CAPITAL":   TokenType.CAPITAL,
           "BACKTEST":  TokenType.BACKTEST,
           "BETWEEN":   TokenType.BETWEEN,
-          "REBALANCE": TokenType.REBALANCE
+          "REBALANCE": TokenType.REBALANCE,
+          "AND":       TokenType.AND,
+          "OR":        TokenType.OR
         }
 
         self.scan_tokens()
@@ -30,22 +32,31 @@ class Lexer:
             self.add_token(Token(token_type=TokenType.DOLLAR, token_val=self.number()))
 
         elif c == ":":
-            self.add_token(Token(token_type=TokenType.COLON))
+            self.add_token(Token(token_type=TokenType.COLON, token_val=None))
         
         elif c == ",":
-            self.add_token(Token(token_type=TokenType.COMMA))
+            self.add_token(Token(token_type=TokenType.COMMA, token_val=None))
 
         elif self.is_string(c):
             string = self.string()
             if string.strip() in self.keywords:
                 token = self.keywords[string]
-                self.add_token(Token(token_type=token))
+                self.add_token(Token(token_type=token, token_val=None))
             else:
                 self.add_token(Token(token_type=TokenType.IDENTIFIER, token_val=string))
 
+        elif c.isnumeric():
+            self.add_token(Token(token_type=TokenType.DATE, token_val=self.date()))
+
 
     def date(self):
-        pass
+        num = ""
+        while True:
+            c = self.advance()
+            if not c.isnumeric() and c != "-":
+                break
+            num += c
+        return num
 
     
     def number(self):
