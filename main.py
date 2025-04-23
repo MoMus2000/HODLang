@@ -1,4 +1,5 @@
-from lexer import Lexer
+from lexer  import Lexer
+from parser import Parser
 import colorama
 import sys
 
@@ -24,10 +25,16 @@ def run_program(file_name):
     try:
         with open(file_name, "r") as f:
             input_code = f.read()
-            lexed_tokens = Lexer(input_code)
-            for token in lexed_tokens.tokens:
-                print(token)
+            lexer = Lexer(input_code)
+            # for token in lexer.tokens:
+            #     pass
+            parser = Parser(lexer)
+            print(parser.statements)
+            print(f"Parsed Statements : {parser}")
+
     except FileNotFoundError:
         error(f"File Not Found {file_name}")
 
-main()
+if __name__ == "__main__":
+    main()
+
