@@ -5,7 +5,8 @@ from expression import (
 from statement import (
     CapitalStatement,
     PortfolioStatement,
-    ExpressionStatement
+    ExpressionStatement,
+    BackTestStatement
 )
 
 class Parser:
@@ -37,6 +38,9 @@ class Parser:
             tickers = self.parse_tickers()
             return PortfolioStatement(tickers)
 
+        if self.match(TokenType.BACKTEST):
+            expr = self.expression_statement()
+            return BackTestStatement(expr)
 
         return self.statement()
 
@@ -73,8 +77,11 @@ class Parser:
                 return True
         return False
 
-    def statement(self):
+    def expression_statement(self):
         return self.comparision()
+
+    def statement(self):
+        return self.expression_statement()
 
     def previous(self):
         return self.tokens[self.current-1]
