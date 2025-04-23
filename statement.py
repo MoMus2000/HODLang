@@ -10,3 +10,7 @@ class PortfolioStatement:
     def __init__(self, tickers):
         self.tickers = tickers
 
+class ExpressionStatement:
+    def __init__(self, expr):
+        self.expr = expr
+

@@ -1,7 +1,11 @@
 from token import TokenType
+from expression import (
+    BinaryExpression
+)
 from statement import (
     CapitalStatement,
-    PortfolioStatement
+    PortfolioStatement,
+    ExpressionStatement
 )
 
 class Parser:
@@ -36,6 +40,19 @@ class Parser:
 
         return self.statement()
 
+    def comparision(self):
+        if self.match(TokenType.BETWEEN):
+            d1 = self.consume(TokenType.DATE, "Expected date")
+            if not self.match(TokenType.AND, TokenType.OR):
+                raise Exception("Unsupported Operator")
+            op = self.previous()
+            d2 = self.consume(TokenType.DATE, "Expected date")
+
+            return ExpressionStatement(BinaryExpression(
+                d1, op, d2
+            ))
+
+        self.advance()
 
     def parse_tickers(self):
         tickers = []
@@ -49,7 +66,6 @@ class Parser:
         return tickers
 
 
-
     def match(self, *ttype):
         for token in ttype:
             if self.check(token):
@@ -58,8 +74,7 @@ class Parser:
         return False
 
     def statement(self):
-        self.advance()
-        return None
+        return self.comparision()
 
     def previous(self):
         return self.tokens[self.current-1]
