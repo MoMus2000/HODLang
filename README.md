@@ -1,2 +1,17 @@
 # HODLang
 Hold Onto Dear Life Lang - Diamond Hands
+
+### Sample Code
+```bash
+PORTFOLIO:
+  SPY(75), GLD(15), SLV(10)
+
+CAPITAL:
+  $500.69
+
+BACKTEST BETWEEN 2020-11-12 AND 2021-12-13
+
+REBALANCE EVERY 10 days
+
+PLOT
+```
