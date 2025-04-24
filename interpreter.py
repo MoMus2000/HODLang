@@ -1,10 +1,16 @@
+from executor import Executor
+from tokens import TokenType
+
 class Interpreter:
     def __init__(self, parser):
-        self.parser = parser
+        self.parser   = parser
+        self.executor = Executor()
 
     def interpret(self):
         for statement in self.parser.statements:
             statement.accept(self)
+        print(self.executor)
+        self.executor.execute()
 
     def visit_portfolio_statement(self, stmt):
         print("===Portfolio==")
@@ -12,25 +18,31 @@ class Interpreter:
         print(stmt.allocation)
         if sum(stmt.allocation) != 100:
             raise Exception("Invalid Portfolio Allocation - Should add to 100%")
+        self.executor.portfolio = {
+            "allocations": stmt.allocation,
+            "tickers": stmt.tickers
+        }
         print("==============")
 
     def visit_expression_statement(self, stmt):
-        print("==Expr==")
-        stmt.expr.accept(self)
-        print("========")
+        return stmt.expr.accept(self)
 
     def visit_capital_statement(self, stmt):
         print("==Capital==")
         print("$"+stmt.amount)
+        self.executor.capital = stmt.amount
         print("===========")
 
     def visit_backtest_statement(self, stmt):
-        print("==BackTest==")
         stmt.expr.accept(self)
-        print("============")
 
     def visit_binary_expression(self, expr):
-        print("D1: ", expr.left)
-        print("OP: ", expr.op)
-        print("D2: ", expr.right)
+        if expr.left.token_type == TokenType.DATE and expr.right.token_type == TokenType.DATE:
+           self.executor.conditionals[expr.op.token_type.name] = [
+            expr.left.token_val,
+            expr.right.token_val
+        ]
 
+    def visit_rebalance_statement(self, expr):
+        self.executor.conditionals["REBALANCE"] = [expr.num.token_val,
+                                                   expr.interval.token_val]

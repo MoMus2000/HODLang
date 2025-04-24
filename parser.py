@@ -1,4 +1,4 @@
-from token import TokenType
+from tokens import TokenType
 from expression import (
     BinaryExpression
 )
@@ -6,7 +6,8 @@ from statement import (
     CapitalStatement,
     PortfolioStatement,
     ExpressionStatement,
-    BackTestStatement
+    BackTestStatement,
+    RebalanceStatement
 )
 
 class Parser:
@@ -42,6 +43,11 @@ class Parser:
             expr = self.expression_statement()
             return BackTestStatement(expr)
 
+        if self.match(TokenType.REBALANCE):
+            self.consume(TokenType.EVERY, "Missing Keyword EVERY")
+            date = self.consume(TokenType.DATE,  "Missing Keyword for Cadence")
+            interval = self.consume(TokenType.IDENTIFIER, "Missing Interval")
+            return RebalanceStatement(date, interval)
         return self.statement()
 
     def comparision(self):

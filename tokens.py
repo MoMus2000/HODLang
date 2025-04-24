@@ -29,6 +29,7 @@ class TokenType(Enum):
     RUN         = auto()
     OR          = auto()
     PLOT        = auto()
+    EVERY       = auto()
     EOF         = auto()
 
 class Token:

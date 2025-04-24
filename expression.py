@@ -15,6 +15,6 @@ class BinaryExpression(Expression):
         self.right = right
 
     def accept(self, visitor):
-        visitor.visit_binary_expression(self)
+        return visitor.visit_binary_expression(self)
 
 

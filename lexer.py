@@ -1,4 +1,4 @@
-from token import Token, TokenType
+from tokens import Token, TokenType
 
 class Lexer:
     def __init__(self, source_code):
@@ -14,7 +14,8 @@ class Lexer:
           "REBALANCE": TokenType.REBALANCE,
           "AND":       TokenType.AND,
           "OR":        TokenType.OR,
-          "PLOT":      TokenType.PLOT
+          "PLOT":      TokenType.PLOT,
+          "EVERY":     TokenType.EVERY
         }
 
         self.scan_tokens()
