@@ -1,5 +1,5 @@
 # HODLang
-Hold Onto Dear Life Lang - Diamond Hands
+Hold Onto Dear Life Lang
 
 ### Sample Code
 ```bash
@@ -9,9 +9,12 @@ PORTFOLIO:
 CAPITAL:
   $500.69
 
+BENCHMARK:
+  SPY
+
 BACKTEST BETWEEN 2020-11-12 AND 2021-12-13
 
-REBALANCE EVERY 10 days
+REBALANCE EVERY 10 DAYS
 
 PLOT
 ```
