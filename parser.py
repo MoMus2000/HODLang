@@ -7,7 +7,9 @@ from statement import (
     PortfolioStatement,
     ExpressionStatement,
     BackTestStatement,
-    RebalanceStatement
+    RebalanceStatement,
+    PlotStatement,
+    BenchMarkStatement
 )
 
 class Parser:
@@ -31,13 +33,17 @@ class Parser:
     def declaration(self):
         if self.match(TokenType.CAPITAL):
             self.consume(TokenType.COLON, "COLON")
-            amount = self.consume(TokenType.DOLLAR, "Get amount").token_val
+            amount = float(self.consume(TokenType.DOLLAR, "Get amount").token_val)
             return CapitalStatement(amount)
 
         if self.match(TokenType.PORTFOLIO):
             self.consume(TokenType.COLON, "COLON")
             tickers, allocations = self.parse_tickers()
             return PortfolioStatement(tickers, allocations)
+
+        if self.match(TokenType.BENCHMARK):
+            self.consume(TokenType.COLON, "COLON")
+            return BenchMarkStatement(self.parse_benchmarks())
 
         if self.match(TokenType.BACKTEST):
             expr = self.expression_statement()
@@ -46,7 +52,7 @@ class Parser:
         if self.match(TokenType.REBALANCE):
             self.consume(TokenType.EVERY, "Missing Keyword EVERY")
             date = self.consume(TokenType.DATE,  "Missing Keyword for Cadence")
-            interval = self.consume(TokenType.IDENTIFIER, "Missing Interval")
+            interval = self.consume(TokenType.DAYS, "Missing Interval in DAYS")
             return RebalanceStatement(date, interval)
         return self.statement()
 
@@ -62,7 +68,22 @@ class Parser:
                 d1, op, d2
             ))
 
+        return self.primary()
+
+    def primary(self):
+        if self.match(TokenType.PLOT):
+            return PlotStatement()
         self.advance()
+
+    def parse_benchmarks(self):
+        tickers = []
+        if self.peek().token_type == TokenType.IDENTIFIER:
+            while self.match(TokenType.IDENTIFIER):
+                ticker = self.previous()
+                tickers.append(ticker.token_val)
+                if self.check(TokenType.COMMA):
+                    self.consume(TokenType.COMMA, "Consume comma")
+        return tickers
 
     def parse_tickers(self):
         tickers = []

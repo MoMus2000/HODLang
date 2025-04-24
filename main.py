@@ -27,14 +27,15 @@ def run_program(file_name):
         with open(file_name, "r") as f:
             input_code = f.read()
             lexer       = Lexer(input_code)
-            # for token in lexer.tokens:
-            #     print(token)
             parser      = Parser(lexer)
             interpreter = Interpreter(parser)
             interpreter.interpret()
 
     except FileNotFoundError:
         error(f"File Not Found {file_name}")
+
+    except KeyboardInterrupt:
+        error(f"Closing ...")
 
 if __name__ == "__main__":
     main()

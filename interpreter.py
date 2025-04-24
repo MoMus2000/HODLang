@@ -29,7 +29,7 @@ class Interpreter:
 
     def visit_capital_statement(self, stmt):
         print("==Capital==")
-        print("$"+stmt.amount)
+        print("$"+str(stmt.amount))
         self.executor.capital = stmt.amount
         print("===========")
 
@@ -44,5 +44,12 @@ class Interpreter:
         ]
 
     def visit_rebalance_statement(self, expr):
-        self.executor.conditionals["REBALANCE"] = [expr.num.token_val,
-                                                   expr.interval.token_val]
+        self.executor.conditionals["REBALANCE"] = [int(expr.num.token_val),
+                                                   expr.interval.token_type.name]
+
+    def visit_plot_statement(self, _):
+        self.executor.plot = True
+
+    def visit_benchmark_statement(self, stmt):
+        self.executor.benchmarks= stmt.benchmarks
+

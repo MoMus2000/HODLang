@@ -45,3 +45,17 @@ class RebalanceStatement(Statement):
     def accept(self, visitor):
         return visitor.visit_rebalance_statement(self)
 
+class PlotStatement(Statement):
+    def __init__(self):
+        pass
+    
+    def accept(self, visitor):
+        return visitor.visit_plot_statement(self)
+
+class BenchMarkStatement(Statement):
+    def __init__(self, benchmarks):
+        self.benchmarks = benchmarks
+    
+    def accept(self, visitor):
+        return visitor.visit_benchmark_statement(self)
+

@@ -30,6 +30,8 @@ class TokenType(Enum):
     OR          = auto()
     PLOT        = auto()
     EVERY       = auto()
+    DAYS        = auto()
+    BENCHMARK   = auto()
     EOF         = auto()
 
 class Token:

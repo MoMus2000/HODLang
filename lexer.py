@@ -15,7 +15,9 @@ class Lexer:
           "AND":       TokenType.AND,
           "OR":        TokenType.OR,
           "PLOT":      TokenType.PLOT,
-          "EVERY":     TokenType.EVERY
+          "EVERY":     TokenType.EVERY,
+          "DAYS":      TokenType.DAYS,
+          "BENCHMARK": TokenType.BENCHMARK
         }
 
         self.scan_tokens()
@@ -23,7 +25,7 @@ class Lexer:
     def scan_tokens(self):
         while not self.is_at_end():
             self.scan_token()
-        self.add_token(Token(TokenType.EOF, None))
+        self.add_token(Token(TokenType.EOF, ""))
 
     def add_token(self, t):
         self.tokens.append(t)
@@ -45,7 +47,7 @@ class Lexer:
         elif c == ",":
             self.add_token(Token(token_type=TokenType.COMMA, token_val=None))
 
-        elif self.is_string(c):
+        elif self.is_string(c) or c == "^":
             string = self.string()
             if string.strip() in self.keywords:
                 token = self.keywords[string]
@@ -81,10 +83,18 @@ class Lexer:
         str_val = ""+self.source_code[self.current-1]
         while True:
             c = self.source_code[self.current]
-            if not c.isalpha():
+            if c == "^":
+                pass
+            elif c == "=":
+                pass
+            elif c.isnumeric():
+                pass
+            elif not c.isalpha():
                 break
+
             str_val += c
             self.advance()
+
         return str_val
     
     def is_string(self, c):

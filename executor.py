@@ -7,6 +7,7 @@ class Executor:
         self.portfolio    = {}
         self.plot         = False
         self.backend      = None
+        self.benchmarks   = None
 
 
     def execute(self):
