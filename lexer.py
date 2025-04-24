@@ -13,7 +13,8 @@ class Lexer:
           "BETWEEN":   TokenType.BETWEEN,
           "REBALANCE": TokenType.REBALANCE,
           "AND":       TokenType.AND,
-          "OR":        TokenType.OR
+          "OR":        TokenType.OR,
+          "PLOT":      TokenType.PLOT
         }
 
         self.scan_tokens()
@@ -33,6 +34,12 @@ class Lexer:
 
         elif c == ":":
             self.add_token(Token(token_type=TokenType.COLON, token_val=None))
+
+        elif c == "(":
+            self.add_token(Token(token_type=TokenType.LEFT_PAREN, token_val=None))
+
+        elif c == ")":
+            self.add_token(Token(token_type=TokenType.RIGHT_PAREN, token_val=None))
         
         elif c == ",":
             self.add_token(Token(token_type=TokenType.COMMA, token_val=None))
@@ -50,10 +57,11 @@ class Lexer:
 
 
     def date(self):
-        num = ""
+        num = ""+self.source_code[self.current-1]
         while True:
             c = self.advance()
             if not c.isnumeric() and c != "-":
+                self.current -= 1
                 break
             num += c
         return num

@@ -1,5 +1,5 @@
 PORTFOLIO:
-  SPY, GLD
+  SPY(75), GLD(15), SLV(10)
 
 CAPITAL:
   $500.69

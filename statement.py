@@ -16,8 +16,9 @@ class CapitalStatement(Statement):
         visitor.visit_capital_statement(self)
 
 class PortfolioStatement(Statement):
-    def __init__(self, tickers):
-        self.tickers = tickers
+    def __init__(self, tickers, allocation):
+        self.tickers    = tickers
+        self.allocation = allocation
 
     def accept(self, visitor):
         visitor.visit_portfolio_statement(self)

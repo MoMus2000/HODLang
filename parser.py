@@ -35,8 +35,8 @@ class Parser:
 
         if self.match(TokenType.PORTFOLIO):
             self.consume(TokenType.COLON, "COLON")
-            tickers = self.parse_tickers()
-            return PortfolioStatement(tickers)
+            tickers, allocations = self.parse_tickers()
+            return PortfolioStatement(tickers, allocations)
 
         if self.match(TokenType.BACKTEST):
             expr = self.expression_statement()
@@ -60,14 +60,19 @@ class Parser:
 
     def parse_tickers(self):
         tickers = []
+        allocations = []
         if self.peek().token_type == TokenType.IDENTIFIER:
             while self.match(TokenType.IDENTIFIER):
                 ticker = self.previous()
                 tickers.append(ticker.token_val)
+                self.consume(TokenType.LEFT_PAREN, "Expected Left Paren")
+                allocation = self.consume(TokenType.DATE, "Expected portfolio allocation")
+                self.consume(TokenType.RIGHT_PAREN, "Expected Right Paren")
+                allocations.append(int(allocation.token_val))
                 if self.check(TokenType.COMMA):
                     self.consume(TokenType.COMMA, "Consume comma")
 
-        return tickers
+        return tickers, allocations
 
 
     def match(self, *ttype):

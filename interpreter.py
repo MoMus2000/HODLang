@@ -9,6 +9,9 @@ class Interpreter:
     def visit_portfolio_statement(self, stmt):
         print("===Portfolio==")
         print(stmt.tickers)
+        print(stmt.allocation)
+        if sum(stmt.allocation) != 100:
+            raise Exception("Invalid Portfolio Allocation - Should add to 100%")
         print("==============")
 
     def visit_expression_statement(self, stmt):
