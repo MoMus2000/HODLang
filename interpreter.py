@@ -55,6 +55,11 @@ class Interpreter:
     def visit_benchmark_statement(self, stmt):
         self.executor.benchmarks= stmt.benchmarks
 
-    def visit_var_statement(self, stmt):
+    def visit_set_statement(self, stmt):
+        if stmt.ident.token_type == TokenType.IDENTIFIER and stmt.ident.token_val == "DEBUG":
+            if stmt.value.token_val == "TRUE":
+                self.executor.debug = True
+            else:
+                raise Exception(f"Undefined Command {stmt.value.token_val}")
         self.env.define(stmt.ident, stmt.value)
 

@@ -65,5 +65,5 @@ class VarStatement(Statement):
         self.value = value
 
     def accept(self, visitor):
-        return visitor.visit_var_statement(self)
+        return visitor.visit_set_statement(self)
 

@@ -1,4 +1,6 @@
-from backtest import BackTest
+from backends import (
+    yf_backend
+)
 
 class Executor:
     def __init__(self):
@@ -8,11 +10,15 @@ class Executor:
         self.plot         = False
         self.backend      = None
         self.benchmarks   = None
-
+        self.debug        = False
 
     def execute(self):
-        BackTest(self).run_backtest()
-        print("Executing ..")
+        if self.backend is None:
+            yf_backend.YFBackTest(self).run_backtest()
+        elif self.backend == "yf":
+            yf_backend.YFBackTest(self).run_backtest()
+        else:
+            raise Exception("Backend not Defined")
 
     def __str__(self):
         return f"""
