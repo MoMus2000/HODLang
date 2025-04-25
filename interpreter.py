@@ -1,10 +1,12 @@
-from executor import Executor
-from tokens import TokenType
+from environment import Environment
+from executor    import Executor
+from tokens      import TokenType
 
 class Interpreter:
     def __init__(self, parser):
         self.parser   = parser
         self.executor = Executor()
+        self.env      = Environment()
 
     def interpret(self):
         for statement in self.parser.statements:
@@ -52,4 +54,7 @@ class Interpreter:
 
     def visit_benchmark_statement(self, stmt):
         self.executor.benchmarks= stmt.benchmarks
+
+    def visit_var_statement(self, stmt):
+        self.env.define(stmt.ident, stmt.value)
 

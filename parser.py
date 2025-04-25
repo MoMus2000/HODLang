@@ -9,7 +9,8 @@ from statement import (
     BackTestStatement,
     RebalanceStatement,
     PlotStatement,
-    BenchMarkStatement
+    BenchMarkStatement,
+    VarStatement
 )
 
 class Parser:
@@ -54,6 +55,12 @@ class Parser:
             date = self.consume(TokenType.DATE,  "Missing Keyword for Cadence")
             interval = self.consume(TokenType.DAYS, "Missing Interval in DAYS")
             return RebalanceStatement(date, interval)
+
+        if self.match(TokenType.SET):
+            ident = self.consume(TokenType.IDENTIFIER, "Expected Var to Be Set")
+            value = self.consume(TokenType.IDENTIFIER, "Expected Value to Be Set")
+            return VarStatement(ident, value)
+
         return self.statement()
 
     def comparision(self):

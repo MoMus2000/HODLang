@@ -17,7 +17,8 @@ class Lexer:
           "PLOT":      TokenType.PLOT,
           "EVERY":     TokenType.EVERY,
           "DAYS":      TokenType.DAYS,
-          "BENCHMARK": TokenType.BENCHMARK
+          "BENCHMARK": TokenType.BENCHMARK,
+          "SET":       TokenType.SET
         }
 
         self.scan_tokens()

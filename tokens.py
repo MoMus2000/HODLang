@@ -32,6 +32,7 @@ class TokenType(Enum):
     EVERY       = auto()
     DAYS        = auto()
     BENCHMARK   = auto()
+    SET         = auto()
     EOF         = auto()
 
 class Token:

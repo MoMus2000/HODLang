@@ -27,6 +27,8 @@ def run_program(file_name):
         with open(file_name, "r") as f:
             input_code = f.read()
             lexer       = Lexer(input_code)
+            for token in lexer.tokens:
+                print(token)
             parser      = Parser(lexer)
             interpreter = Interpreter(parser)
             interpreter.interpret()

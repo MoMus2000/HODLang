@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 import yfinance as yf
+
+sns.set_theme()
 
 class BackTest:
     def __init__(self, executor):
@@ -26,7 +29,7 @@ class BackTest:
                     "history": yf_ticker.history(start=start_date, end=end_date, auto_adjust=True),
                 }
                 benchmarks[ticker]["daily_return"] = \
-                        benchmarks[ticker]["history"]["Close"].pct_change()
+                        benchmarks[ticker]["history"]["Close"].pct_change().fillna(0)
                 benchmarks[ticker]["daily_return"].dropna(inplace=True)
 
                 benchmarks[ticker]["cap_return"]  = portfolio_value
@@ -48,7 +51,7 @@ class BackTest:
             }
 
             self.tickers[ticker]["daily_return"] = \
-                    self.tickers[ticker]["history"]["Close"].pct_change()
+                    self.tickers[ticker]["history"]["Close"].pct_change().fillna(0)
 
             self.tickers[ticker]["daily_return"].dropna(inplace=True)
 
@@ -94,6 +97,8 @@ class BackTest:
             portfolio_value = sum(asset_values.values())
             portfolio_history[date] = portfolio_value
 
+        print(self.percent_return(self.executor.capital, portfolio_value))
+
         if self.executor.plot:
 
             dates = pd.date_range(start=start_date, end=end_date,
@@ -105,7 +110,7 @@ class BackTest:
                     self.executor.portfolio["tickers"],
                     self.executor.portfolio["allocations"]
                 ):
-                label += f"{ticker}({allocation}) "
+                label += f"Portfolio: {ticker}({allocation}) "
 
 
             plt.plot(dates, values, label=label)
@@ -119,6 +124,8 @@ class BackTest:
 
             plt.title("HODL")
             plt.legend()
+            plt.tight_layout()
+            plt.style.use('fivethirtyeight')
             plt.show()
 
     def percent_return(self, start, end):

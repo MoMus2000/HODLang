@@ -59,3 +59,11 @@ class BenchMarkStatement(Statement):
     def accept(self, visitor):
         return visitor.visit_benchmark_statement(self)
 
+class VarStatement(Statement):
+    def __init__(self, ident, value):
+        self.ident = ident
+        self.value = value
+
+    def accept(self, visitor):
+        return visitor.visit_var_statement(self)
+
