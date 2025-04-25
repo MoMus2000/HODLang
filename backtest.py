@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+import pandas as pd
 import yfinance as yf
 
 class BackTest:
@@ -13,24 +15,25 @@ class BackTest:
         benchmarks = {}
         start_date = None
         end_date   = None
-        for ticker in self.executor.benchmarks:
-            yf_ticker = yf.Ticker(ticker)
+        if self.executor.benchmarks is not None:
+            for ticker in self.executor.benchmarks:
+                yf_ticker = yf.Ticker(ticker)
 
-            start_date = self.executor.conditionals["AND"][0]
-            end_date = self.executor.conditionals["AND"][1]
-            benchmarks[ticker] = {
-                "meta": yf_ticker.info,
-                "history": yf_ticker.history(start=start_date, end=end_date, auto_adjust=True),
-            }
-            benchmarks[ticker]["daily_return"] = \
-                    benchmarks[ticker]["history"]["Close"].pct_change()
-            benchmarks[ticker]["daily_return"].dropna(inplace=True)
+                start_date = self.executor.conditionals["AND"][0]
+                end_date = self.executor.conditionals["AND"][1]
+                benchmarks[ticker] = {
+                    "meta": yf_ticker.info,
+                    "history": yf_ticker.history(start=start_date, end=end_date, auto_adjust=True),
+                }
+                benchmarks[ticker]["daily_return"] = \
+                        benchmarks[ticker]["history"]["Close"].pct_change()
+                benchmarks[ticker]["daily_return"].dropna(inplace=True)
 
-            benchmarks[ticker]["cap_return"]  = portfolio_value
-            benchmarks[ticker]["cap_history"] = []
-            for f_return in benchmarks[ticker]["daily_return"]:
-                benchmarks[ticker]["cap_return"] *= (1 + f_return)
-                benchmarks[ticker]["cap_history"].append(benchmarks[ticker]["cap_return"])
+                benchmarks[ticker]["cap_return"]  = portfolio_value
+                benchmarks[ticker]["cap_history"] = []
+                for f_return in benchmarks[ticker]["daily_return"]:
+                    benchmarks[ticker]["cap_return"] *= (1 + f_return)
+                    benchmarks[ticker]["cap_history"].append(benchmarks[ticker]["cap_return"])
 
         for ticker, allocation in zip(self.executor.portfolio["tickers"],
                                       self.executor.portfolio["allocations"]):
@@ -91,28 +94,33 @@ class BackTest:
             portfolio_value = sum(asset_values.values())
             portfolio_history[date] = portfolio_value
 
-        print(portfolio_value)
-        print(self.percent_return(self.executor.capital, portfolio_value))
-
         if self.executor.plot:
-            import matplotlib.pyplot as plt
-            import pandas as pd
 
             dates = pd.date_range(start=start_date, end=end_date,
                                   periods=len(portfolio_history.values()))
             values = list(portfolio_history.values())
 
-            plt.plot(dates, values)
+            label = ""
+            for ticker, allocation in zip(
+                    self.executor.portfolio["tickers"],
+                    self.executor.portfolio["allocations"]
+                ):
+                label += f"{ticker}({allocation}) "
+
+
+            plt.plot(dates, values, label=label)
 
             for val in benchmarks.keys():
-                print("Plotting Benchmark ", val)
-                print(len(benchmarks[val]["history"]["Close"]))
-                print(len(dates))
-                print(benchmarks[val]["cap_return"])
+                plt.plot(
+                    dates[0:len(benchmarks[val]["cap_history"])],
+                    benchmarks[val]["cap_history"][0:len(benchmarks[val]["cap_history"])],
+                    label=val
+                )
 
-                plt.plot(dates[0:len(benchmarks[val]["cap_history"])], benchmarks[val]["cap_history"][0:len(benchmarks[val]["cap_history"])])
-
+            plt.title("HODL")
+            plt.legend()
             plt.show()
 
     def percent_return(self, start, end):
         return round(100 * ((end - start)/start), 2)
+

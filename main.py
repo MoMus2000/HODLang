@@ -35,7 +35,7 @@ def run_program(file_name):
         error(f"File Not Found {file_name}")
 
     except KeyboardInterrupt:
-        error(f"Closing ...")
+        error(f"\nClosing ...")
 
 if __name__ == "__main__":
     main()

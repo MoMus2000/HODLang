@@ -17,4 +17,3 @@ class BinaryExpression(Expression):
     def accept(self, visitor):
         return visitor.visit_binary_expression(self)
 
-
