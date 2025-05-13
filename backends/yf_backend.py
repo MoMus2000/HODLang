@@ -48,6 +48,7 @@ class YFBackTest(backtest.BackTest):
                 self.benchmarks[ticker]["daily_return"] = \
                         self.benchmarks[ticker]["history"]["Close"].pct_change().fillna(0)
                 self.benchmarks[ticker]["daily_return"].dropna(inplace=True)
+                print(len(self.benchmarks[ticker]["daily_return"]))
 
                 self.benchmarks[ticker]["cap_return"]  = self.portfolio_value
                 self.benchmarks[ticker]["cap_history"] = []
@@ -72,14 +73,15 @@ class YFBackTest(backtest.BackTest):
             self.tickers[ticker]["daily_return"] = \
                     self.tickers[ticker]["history"]["Close"].pct_change().fillna(0)
 
+            print(len(self.tickers[ticker]["daily_return"]))
+
             self.tickers[ticker]["daily_return"].dropna(inplace=True)
 
             self.weights[ticker] = float(allocation/100)
 
         # ---------------------------------------------------------- #
 
-        self.asset_values = {asset: executor.capital * self.weights[asset] for asset in
-                             self.weights}
+        self.asset_values = {asset: executor.capital * self.weights[asset] for asset in self.weights}
         self.portfolio_history = {}
         self.rebalance_interval_days = self.cadence
 

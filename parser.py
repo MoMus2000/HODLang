@@ -99,13 +99,14 @@ class Parser:
             while self.match(TokenType.IDENTIFIER):
                 ticker = self.previous()
                 tickers.append(ticker.token_val)
-                self.consume(TokenType.LEFT_PAREN, "Expected Left Paren")
-                allocation = self.consume(TokenType.DATE, "Expected portfolio allocation")
-                self.consume(TokenType.RIGHT_PAREN, "Expected Right Paren")
-                allocations.append(int(allocation.token_val))
-                if self.check(TokenType.COMMA):
-                    self.consume(TokenType.COMMA, "Consume comma")
-
+                if self.match(TokenType.LEFT_PAREN):
+                    allocation = self.consume(TokenType.DATE, "Expected portfolio allocation")
+                    self.consume(TokenType.RIGHT_PAREN, "Expected Right Paren")
+                    allocations.append(int(allocation.token_val))
+                    if self.check(TokenType.COMMA):
+                        self.consume(TokenType.COMMA, "Consume comma")
+                else:
+                    allocations.append(-1)
         return tickers, allocations
 
 
